@@ -29,7 +29,7 @@ from .types import (
     ExtractResponse,
 )
 
-__version__ = "1.0.0"
+__version__ = "1.3.0"
 __author__ = "MASARAT SA"
 __email__ = "dev@masarat.sa"
 __url__ = "https://arase.masarat.sa"
