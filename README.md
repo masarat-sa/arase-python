@@ -95,6 +95,67 @@ for paper in results.scholar:
     print(f"{paper.title} ({paper.year}) - {paper.citations} citations")
 ```
 
+### Stock Market Search | بحث سوق الأسهم
+
+```python
+# Basic stock search | بحث بسيط
+stocks = client.search(
+    "كم سعر سهم أرامكو؟",
+    include_stocks=True,
+)
+
+if stocks.stocks:
+    for stock in stocks.stocks.results:
+        print(f"{stock.name}: {stock.price} {stock.currency}")
+        print(f"Change: {stock.change_percent}%")
+
+# With AI summary (+1 request) | مع ملخص AI (+1 طلب)
+stocks_with_summary = client.search(
+    "Compare Aramco vs Al Rajhi",
+    include_stocks=True,
+    options={
+        "stocks": {
+            "summary": True
+        }
+    },
+)
+
+print(stocks_with_summary.stocks.summary)
+```
+
+### Weather Search | بحث الطقس
+
+```python
+# Basic weather | طقس بسيط
+weather = client.search(
+    "الطقس في جدة",
+    include_weather=True,
+)
+
+if weather.weather:
+    location = weather.weather.location
+    current = weather.weather.current
+    print(f"{location['name']}: {current['temp_c']}°C, {current['condition']}")
+    
+    # Forecast | التوقعات
+    for day in weather.weather.forecast:
+        print(f"{day.date}: {day.mintemp_c}°C - {day.maxtemp_c}°C")
+
+# With AI summary and advice (+1 request) | مع ملخص ونصائح AI
+weather_with_summary = client.search(
+    "Weather in Riyadh",
+    include_weather=True,
+    options={
+        "weather": {
+            "summary": True
+        }
+    },
+)
+
+print(weather_with_summary.weather.summary)
+print(weather_with_summary.weather.advice)
+```
+
 ### Content Extraction | استخراج المحتوى
 
 ```python
@@ -124,8 +185,20 @@ options = SearchOptions(
     include_places=True,
     include_shopping=True,
     include_scholar=True,
+    include_stocks=True,      # 🆕 Stock market data
+    include_weather=True,     # 🆕 Weather forecasts
     topic="general",          # general | news | academic
     max_steps=3,              # For deep search | للبحث العميق
+    
+    # Optional AI summaries | ملخصات AI اختيارية
+    options={
+        "stocks": {
+            "summary": True  # +1 request | +1 طلب
+        },
+        "weather": {
+            "summary": True  # +1 request | +1 طلب
+        },
+    },
 )
 
 results = client.search("query", options=options)
@@ -188,6 +261,10 @@ from arase import (
     SearchResponse,
     SearchResult,
     ImageResult,
+    StockResult,        # 🆕 New: Stock data types
+    StocksResponse,     # 🆕 New: Stock response
+    WeatherForecast,    # 🆕 New: Weather forecast
+    WeatherResponse,    # 🆕 New: Weather response
     # ... etc
 )
 ```
